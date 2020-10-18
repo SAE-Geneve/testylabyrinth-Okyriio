@@ -36,7 +36,7 @@ public:
 	void ShowEnemies() const;
 	void HeroAttack();
 	void EnemyAttack();
-
+	
 public:
 	void Regen() { hero_.Regen(); }
 	Hero& GetHero() { return hero_; }

@@ -1,57 +1,112 @@
 #include "world.h"
-
+#include "character.h"
 #include <cassert>
 #include <iostream>
 #include <limits>
 
-World::World(const std::string& map, int length) : hero_({0, 0})
+World::World(const std::string& map, int length) : hero_({0,0})
 {
-	// TODO: Complete me!
+	int i = 0;
+	for(auto cell:map)
+	{
+		std::pair<int, int> pos = { i % length, i / length };
+		if (cell == 'P')
+		{
+			hero_.SetPosition(pos);
+			map_[pos] = 'P';
+		}
+		if(cell == 'E')
+		{
+			Enemy enemy(pos);
+			enemies_.push_back(enemy);
+			map_[pos] = 'E';
+		}
+		if(cell == '#')
+		{
+			map_[pos] = '#';
+		}
+		if ( cell == '.')
+		{
+			map_[pos] = '.';
+		}
+		i++;
+	}
+	
+	// done
 }
 
 void World::EraseDead()
 {
-	// TODO: Complete me!
+	int n = 0;
+	for ( auto& enemy : enemies_)
+	{
+		if (enemy.IsDead())
+		{
+			enemies_.erase(enemies_.begin() + n);
+		}
+		n++;
+	}
+	// Done
 }
 
 bool World::HasEnemies() const
 {
-	// TODO: Complete me!
-	return true;
+	// Done
+	return enemies_.size();
 }
 
 std::pair<int, int> World::North(const Character& character) const
 {
-	// TODO: Complete me!
-	return { 0, 0 };
+	if (GetTile({ character.GetPosition().first, character.GetPosition().second - 1 }) != '.')
+	{
+		return character.GetPosition();
+	}
+	//done
+	return { character.GetPosition().first, character.GetPosition().second - 1 };
 }
 
 std::pair<int, int> World::South(const Character& character) const
 {
-	// TODO: Complete me!
-	return { 0, 0 };
+	if (GetTile({ character.GetPosition().first, character.GetPosition().second + 1 }) != '.')
+	{
+		return character.GetPosition();
+	}
+	//done
+	return { character.GetPosition().first, character.GetPosition().second + 1 };
 }
 
 std::pair<int, int> World::East(const Character& character) const
 {
-	// TODO: Complete me!
-	return { 0, 0 };
+	if (GetTile({ character.GetPosition().first + 1, character.GetPosition().second}) != '.')
+	{
+		return character.GetPosition();
+	}
+	//done
+	return { character.GetPosition().first + 1, character.GetPosition().second };
 }
 
 std::pair<int, int> World::West(const Character& character) const
 {
-	// TODO: Complete me!
-	return { 0, 0 };
+	if (GetTile({ character.GetPosition().first - 1, character.GetPosition().second }) != '.')
+	{
+		return character.GetPosition();
+	}
+	//done
+	return { character.GetPosition().first - 1, character.GetPosition().second };
 }
 
 void World::HeroAttack()
 {
-	// TODO: Complete me!
+	for (auto& enemy : enemies_)
+	{
+		hero_.Attack(enemy);
+	}
+	// Done
 }
 
 void World::ShowMap() const
 {
-	// Show the maze to the user.
+	//Show the maze to the user.
 	std::cout << "Maze :\n";
 	for (int i = -1; i < 2; ++i)
 	{
@@ -105,19 +160,24 @@ void World::ShowEnemies() const
 
 void World::EnemyAttack()
 {
-	// TODO: Complete me!
+	for (auto& enemy : enemies_)
+	{
+		enemy.Attack(hero_);
+	}
+	// Done
 }
 
 std::pair<int, int> World::CheckPosition(
-	std::pair<int, int> begin, 
+	std::pair<int, int> begin,
 	std::pair<int, int> end) const
 {
-	// TODO: Complete me!
+
+	// Done
 	return { 0, 0 };
 }
 
 char World::GetTile(std::pair<int, int> xy) const
 {
-	// TODO: Complete me!
-	return '#';
+	return map_.at(xy);
+	//Done	
 }
